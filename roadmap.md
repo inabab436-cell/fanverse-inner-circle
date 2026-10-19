@@ -5,3 +5,4 @@
 - [x] Questions & live voting tab
 - [ ] Link Elissa's official account to the artist role — waiting on the account email from the user
 - تصميم لوجو يعبّر عن فكرة المنصة (الفانز يدورون حول الفنان)
+- اللوجو يجب أن يعبّر عن الترابط بين الفانز (دوائر متساوية متصلة، بلا مركز مهيمن) وليس فكرة مركز يدور حوله جمهور
