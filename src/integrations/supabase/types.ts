@@ -141,6 +141,84 @@ export type Database = {
           },
         ]
       }
+      poll_votes: {
+        Row: {
+          option_index: number
+          poll_id: string
+          user_id: string
+        }
+        Insert: {
+          option_index: number
+          poll_id: string
+          user_id: string
+        }
+        Update: {
+          option_index?: number
+          poll_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "poll_votes_poll_id_fkey"
+            columns: ["poll_id"]
+            isOneToOne: false
+            referencedRelation: "polls"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "poll_votes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      polls: {
+        Row: {
+          artist_id: string
+          by_artist: boolean
+          created_at: string
+          id: string
+          options: string[]
+          question: string
+          user_id: string
+        }
+        Insert: {
+          artist_id: string
+          by_artist?: boolean
+          created_at?: string
+          id?: string
+          options: string[]
+          question: string
+          user_id: string
+        }
+        Update: {
+          artist_id?: string
+          by_artist?: boolean
+          created_at?: string
+          id?: string
+          options?: string[]
+          question?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "polls_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: false
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "polls_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       posts: {
         Row: {
           artist_id: string
@@ -240,6 +318,119 @@ export type Database = {
           },
         ]
       }
+      room_messages: {
+        Row: {
+          artist_id: string
+          content: string
+          created_at: string
+          id: string
+          is_artist: boolean
+          nodded: boolean
+          user_id: string
+        }
+        Insert: {
+          artist_id: string
+          content: string
+          created_at?: string
+          id?: string
+          is_artist?: boolean
+          nodded?: boolean
+          user_id: string
+        }
+        Update: {
+          artist_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          is_artist?: boolean
+          nodded?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "room_messages_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: false
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "room_messages_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      room_reactions: {
+        Row: {
+          artist_id: string
+          created_at: string
+          emoji: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          artist_id: string
+          created_at?: string
+          emoji: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          artist_id?: string
+          created_at?: string
+          emoji?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "room_reactions_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: false
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "room_reactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          artist_id: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          artist_id?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          artist_id?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_roles_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: false
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -249,9 +440,13 @@ export type Database = {
         Args: { _amount: number; _user: string }
         Returns: undefined
       }
+      is_artist_of: {
+        Args: { _artist: string; _user: string }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "artist" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -378,6 +573,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "artist", "user"],
+    },
   },
 } as const
