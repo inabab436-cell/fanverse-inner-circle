@@ -25,9 +25,10 @@ export function levelFor(points: number) {
   levels.forEach((l, idx) => {
     if (points >= l.min) i = idx;
   });
+  const cur = levels[i]!;
   const next = levels[i + 1];
-  const progress = next ? ((points - levels[i].min) / (next.min - levels[i].min)) * 100 : 100;
-  return { index: i + 1, name: levels[i].name, next, progress };
+  const progress = next ? ((points - cur.min) / (next.min - cur.min)) * 100 : 100;
+  return { index: i + 1, name: cur.name, next, progress };
 }
 
 export function badgesFor(stats: { posts: number; art: number; translation: number; help: number; projects: number }) {

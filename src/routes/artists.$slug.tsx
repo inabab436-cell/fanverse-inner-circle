@@ -60,19 +60,19 @@ function World() {
   async function submit() {
     if (!user || !content.trim()) return;
     const { error } = await supabase.from("posts").insert({ artist_id: artist.id, user_id: user.id, kind, content: content.trim() });
-    if (error) return toast.error("تعذّر النشر");
+    if (error) { toast.error("تعذّر النشر"); return; }
     const pts = postKinds.find((k) => k.value === kind)?.points;
     toast.success(`نُشر! +${pts} نقطة`);
     setContent("");
     refresh();
   }
   async function appreciate(postId: string) {
-    if (!user) return toast("سجّل الدخول لتقدير المساهمات");
+    if (!user) { toast("سجّل الدخول لتقدير المساهمات"); return; }
     const { error } = await supabase.from("appreciations").insert({ post_id: postId, user_id: user.id });
     if (!error) { toast.success("وصل تقديرك لصاحب المنشور 💗"); refresh(); }
   }
   async function join(projectId: string) {
-    if (!user) return toast("سجّل الدخول للمشاركة");
+    if (!user) { toast("سجّل الدخول للمشاركة"); return; }
     const { error } = await supabase.from("project_contributions").insert({ project_id: projectId, user_id: user.id });
     if (!error) { toast.success("انضممت للمشروع! +8 نقاط"); refresh(); }
   }
