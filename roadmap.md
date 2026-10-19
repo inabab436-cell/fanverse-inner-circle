@@ -1,5 +1,6 @@
 # Roadmap
-- [ ] Live room (realtime chat + presence) inside artist world
-- [ ] Artist role: pinned artist lines + "nod" on fan messages
-- [ ] Quick reactions/mood + mini game (guess the song) in room
-- [ ] App-like bottom navigation with all features
+- [x] Live room (realtime chat + presence) inside artist world
+- [x] Artist role: pinned artist lines + "nod" on fan messages
+- [x] Quick reactions + random topic button in room
+- [x] Questions & live voting tab
+- [ ] Link Elissa's official account to the artist role — waiting on the account email from the user
