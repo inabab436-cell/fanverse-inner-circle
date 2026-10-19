@@ -14,13 +14,241 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      appreciations: {
+        Row: {
+          created_at: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appreciations_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appreciations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      artists: {
+        Row: {
+          bio: string
+          created_at: string
+          field: string
+          id: string
+          image: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          bio: string
+          created_at?: string
+          field: string
+          id?: string
+          image: string
+          name: string
+          slug: string
+        }
+        Update: {
+          bio?: string
+          created_at?: string
+          field?: string
+          id?: string
+          image?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      challenges: {
+        Row: {
+          artist_id: string
+          description: string
+          ends_at: string
+          id: string
+          title: string
+        }
+        Insert: {
+          artist_id: string
+          description: string
+          ends_at: string
+          id?: string
+          title: string
+        }
+        Update: {
+          artist_id?: string
+          description?: string
+          ends_at?: string
+          id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenges_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: false
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_projects: {
+        Row: {
+          artist_id: string
+          description: string
+          goal: number
+          id: string
+          title: string
+        }
+        Insert: {
+          artist_id: string
+          description: string
+          goal: number
+          id?: string
+          title: string
+        }
+        Update: {
+          artist_id?: string
+          description?: string
+          goal?: number
+          id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_projects_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: false
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      posts: {
+        Row: {
+          artist_id: string
+          content: string
+          created_at: string
+          id: string
+          kind: string
+          user_id: string
+        }
+        Insert: {
+          artist_id: string
+          content: string
+          created_at?: string
+          id?: string
+          kind?: string
+          user_id: string
+        }
+        Update: {
+          artist_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          kind?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "posts_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: false
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "posts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          bio: string | null
+          created_at: string
+          display_name: string
+          id: string
+          points: number
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string
+          display_name?: string
+          id: string
+          points?: number
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string
+          display_name?: string
+          id?: string
+          points?: number
+        }
+        Relationships: []
+      }
+      project_contributions: {
+        Row: {
+          created_at: string
+          project_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          project_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          project_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_contributions_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "group_projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_contributions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      add_points: {
+        Args: { _amount: number; _user: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
