@@ -1,9 +1,6 @@
-import layla from "@/assets/layla.jpg";
-import omar from "@/assets/omar.jpg";
-import nour from "@/assets/nour.jpg";
-import salma from "@/assets/salma.jpg";
+import elissa from "@/assets/elissa.jpg";
 
-export const artistImages: Record<string, string> = { layla, omar, nour, salma };
+export const artistImages: Record<string, string> = { elissa };
 
 export const postKinds = [
   { value: "thought", label: "فكرة", points: 5 },
