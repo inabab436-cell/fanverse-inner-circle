@@ -5,6 +5,8 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/useSession";
 import { artistImages, postKinds } from "@/lib/community";
+import { Room } from "@/components/Room";
+import { Polls } from "@/components/Polls";
 
 export const Route = createFileRoute("/artists/$slug")({
   head: () => ({
@@ -27,7 +29,7 @@ function World() {
   const [limit, setLimit] = useState(PAGE);
   const [content, setContent] = useState("");
   const [kind, setKind] = useState<string>("thought");
-  const [tab, setTab] = useState<"posts" | "challenges" | "projects">("posts");
+  const [tab, setTab] = useState<"room" | "polls" | "posts" | "challenges" | "projects">("room");
 
   const { data } = useQuery({
     queryKey: ["world", slug, user?.id, limit],
@@ -48,7 +50,12 @@ function World() {
         tally[p.user_id] = { name, n: (tally[p.user_id]?.n ?? 0) + 1 };
       });
       const top = Object.values(tally).sort((a, b) => b.n - a.n).slice(0, 5);
-      return { artist, posts: posts.data ?? [], challenges: challenges.data ?? [], projects: projects.data ?? [], contribs: contribs.data ?? [], appr: appr.data ?? [], top };
+      let isArtist = false;
+      if (user) {
+        const { data: r } = await supabase.from("user_roles").select("id").eq("user_id", user.id).eq("role", "artist").eq("artist_id", artist.id).maybeSingle();
+        isArtist = !!r;
+      }
+      return { isArtist, artist, posts: posts.data ?? [], challenges: challenges.data ?? [], projects: projects.data ?? [], contribs: contribs.data ?? [], appr: appr.data ?? [], top };
     },
   });
 
@@ -97,11 +104,15 @@ function World() {
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-8 lg:grid-cols-[1fr_280px]">
         <div>
           <div className="flex flex-wrap gap-2">
-            {tabBtn("posts", "المجتمع")}
+            {tabBtn("room", "💬 الغرفة الحيّة")}
+            {tabBtn("polls", "🗳️ أسئلة وتصويت")}
+            {tabBtn("posts", "📝 المساهمات")}
             {tabBtn("challenges", "التحديات")}
             {tabBtn("projects", "مشاريع جماعية")}
           </div>
 
+          {tab === "room" && <div className="mt-6"><Room artistId={artist.id} artistName={artist.name} user={user} isArtist={data.isArtist} /></div>}
+          {tab === "polls" && <div className="mt-6"><Polls artistId={artist.id} artistName={artist.name} user={user} isArtist={data.isArtist} /></div>}
           {tab === "posts" && (
             <div className="mt-6 space-y-4">
               {user ? (
