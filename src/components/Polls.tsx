@@ -36,15 +36,15 @@ export function Polls({ artistId, artistName, user, isArtist }: { artistId: stri
   }, [artistId]);
 
   async function create() {
-    if (!user) return toast("سجّل الدخول");
+    if (!user) { toast("سجّل الدخول"); return; }
     const clean = opts.map((o) => o.trim()).filter(Boolean);
-    if (!q.trim() || clean.length < 2) return toast("اكتب سؤالًا وخيارين على الأقل");
+    if (!q.trim() || clean.length < 2) { toast("اكتب سؤالًا وخيارين على الأقل"); return; }
     const { error } = await supabase.from("polls").insert({ artist_id: artistId, user_id: user.id, question: q.trim(), options: clean, by_artist: isArtist });
-    if (error) return toast.error("تعذّر الإنشاء");
+    if (error) { toast.error("تعذّر الإنشاء"); return; }
     setQ(""); setOpts(["", ""]); setOpen(false);
   }
   async function vote(pollId: string, i: number) {
-    if (!user) return toast("سجّل الدخول للتصويت");
+    if (!user) { toast("سجّل الدخول للتصويت"); return; }
     await supabase.from("poll_votes").insert({ poll_id: pollId, user_id: user.id, option_index: i });
   }
 

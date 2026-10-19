@@ -69,14 +69,14 @@ export function Room({ artistId, artistName, user, isArtist }: { artistId: strin
   const pinned = useMemo(() => [...msgs].reverse().find((m) => m.is_artist), [msgs]);
 
   async function send() {
-    if (!user) return toast("سجّل الدخول للدخول للغرفة");
+    if (!user) { toast("سجّل الدخول للدخول للغرفة"); return; }
     if (!text.trim()) return;
     const { error } = await supabase.from("room_messages").insert({ artist_id: artistId, user_id: user.id, content: text.trim(), is_artist: isArtist && asArtist });
     if (error) toast.error("تعذّر الإرسال");
     else setText("");
   }
   async function react(emoji: string) {
-    if (!user) return toast("سجّل الدخول للتفاعل");
+    if (!user) { toast("سجّل الدخول للتفاعل"); return; }
     await supabase.from("room_reactions").insert({ artist_id: artistId, user_id: user.id, emoji });
   }
   async function nod(id: string) {
