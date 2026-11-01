@@ -36,10 +36,12 @@ export function MovementSurface() {
   }, [hand]);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const element = canvasRef.current;
+    if (!element) return;
+    const context = element.getContext("2d");
+    if (!context) return;
+    const canvas: HTMLCanvasElement = element;
+    const ctx: CanvasRenderingContext2D = context;
     let width = 0, height = 0, frame = 0, previous = 0, lastUi = 0;
     const css = getComputedStyle(document.documentElement);
     const colors = { background: css.getPropertyValue("--background"), grid: css.getPropertyValue("--movement-grid"), primary: css.getPropertyValue("--primary"), accent: css.getPropertyValue("--accent"), white: css.getPropertyValue("--card"), ink: css.getPropertyValue("--foreground"), muted: css.getPropertyValue("--muted-foreground"), trail: css.getPropertyValue("--movement-trail") };
@@ -87,7 +89,7 @@ export function MovementSurface() {
       ctx.fillStyle = colors.white; ctx.strokeStyle = colors.primary; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(0, 0, 22, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
       ctx.fillStyle = colors.primary; ctx.beginPath(); ctx.arc(3, 0, 13, 0, Math.PI * 2); ctx.fill();
       ctx.fillStyle = colors.white; ctx.beginPath(); ctx.arc(9, -5, 2, 0, Math.PI * 2); ctx.arc(9, 5, 2, 0, Math.PI * 2); ctx.fill(); ctx.restore(); ctx.restore();
-      canvas.dataset.x = m.position.x.toFixed(1); canvas.dataset.y = m.position.y.toFixed(1); canvas.dataset.angle = m.angle.toFixed(3);
+      canvas.dataset["x"] = m.position.x.toFixed(1); canvas.dataset["y"] = m.position.y.toFixed(1); canvas.dataset["angle"] = m.angle.toFixed(3);
       frame = requestAnimationFrame(draw);
     }
     frame = requestAnimationFrame(draw);
@@ -104,7 +106,9 @@ export function MovementSurface() {
     const current = { x: event.clientX, y: event.clientY }; pointers.current.set(event.pointerId, current);
     const m = model.current;
     if (pointers.current.size === 2) {
-      const [a, b] = Array.from(pointers.current.values()); const distance = Math.hypot(a.x - b.x, a.y - b.y);
+      const [a, b] = Array.from(pointers.current.values());
+      if (!a || !b) return;
+      const distance = Math.hypot(a.x - b.x, a.y - b.y);
       if (pinchDistance.current > 0) { const rect = event.currentTarget.getBoundingClientRect(); const next = Math.max(0.65, Math.min(1.8, m.zoom * distance / pinchDistance.current)); m.camera = zoomAt(m.camera, m.zoom, next, { x: (a.x + b.x) / 2 - rect.left - rect.width / 2, y: (a.y + b.y) / 2 - rect.top - rect.height * 0.44 }); m.zoom = next; setZoom(next); m.follow = false; setFollow(false); } pinchDistance.current = distance;
     } else if (!m.follow) { m.camera.x -= (current.x - previous.x) / m.zoom; m.camera.y -= (current.y - previous.y) / m.zoom; }
     else { const rect = event.currentTarget.getBoundingClientRect(); const x = current.x - rect.left - rect.width / 2 - (m.position.x - m.camera.x) * m.zoom; const y = current.y - rect.top - rect.height * 0.44 - (m.position.y - m.camera.y) * m.zoom; const target = Math.atan2(y, x); m.angle += Math.atan2(Math.sin(target - m.angle), Math.cos(target - m.angle)) * Math.min(1, sensitivityRef.current); m.looking = true; }
