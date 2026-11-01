@@ -28,7 +28,7 @@ export function MovementSurface() {
     import("nipplejs").then(({ create }) => {
       if (disposed) return;
       const joystick = create({ zone, mode: "static", position: { left: "50%", top: "50%" }, size: 112, color: { front: "var(--primary)", back: "var(--secondary)" }, fadeTime: 100, dynamicPage: true });
-      joystick.on("move", (_event, data) => { model.current.input = analogInput({ x: data.vector.x, y: -data.vector.y }); });
+      joystick.on("move", (event) => { model.current.input = analogInput({ x: event.data.vector.x, y: -event.data.vector.y }); });
       joystick.on("end", () => { model.current.input = { x: 0, y: 0 }; });
       destroy = () => joystick.destroy();
     });
